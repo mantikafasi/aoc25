@@ -7,16 +7,17 @@ p1,p2 = 0,0
 circuits = []
 junctionBoxes = []
 
-def is_connected(j1,j2):
-    for c in circuits:
-        if j1 in c and j2 in c:
-            return True
-    return False
+cache = {}
 
 def merge_circuits(c1,c2):
     if c1 == c2: return
-    circuits[c1].extend(circuits[c2])
+
+    circuits[c1] = circuits[c1] + circuits[c2]
+
+
     circuits.pop(c2)
+
+
 
 def find_in_circuit(j1):    
     for i1,c in enumerate(circuits):
@@ -24,11 +25,12 @@ def find_in_circuit(j1):
             return i1
     return -1
 
+
 with open("input.txt", "r") as file:
     
     for line in file.readlines():
-        junctionBoxes.append([int(i) for i in line.split(",")])    
-        circuits.append([junctionBoxes[-1]])
+        junctionBoxes.append(tuple(int(i) for i in line.split(",")))    
+        circuits.append((junctionBoxes[-1],))
     allResults = []
 
     for c1, c2 in itertools.combinations(junctionBoxes, 2):
